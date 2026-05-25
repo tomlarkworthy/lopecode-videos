@@ -1,0 +1,28 @@
+Lopecode 001 Quickfire — 60s
+============================
+
+Format: 12 cuts × 5s, one feature per cut. Mirrors the newsletter section order.
+
+Cut list
+--------
+00:00  hook            parametric-svg robot arm — drag sliders, IK responds
+00:05  exporter        export menu → single .html file appears, double-click → opens
+00:10  pairing         Claude Code terminal beside notebook, type "add a slider", cell appears
+00:15  file-sync       save in notebook → editor on disk updates instantly
+00:20  history         sidebar timeline → click → cell reverts
+00:25  themes          flip theme dropdown, whole notebook recolors
+00:30  lsp             hover a symbol → tooltip; trigger autocomplete
+00:35  drag-out        grab a cell tab, drag out to OS, .js file lands
+00:40  pdf-tab         open a PDF inside a notebook tab
+00:45  cmd-k           flash palette, fuzzy-find a module, jump
+00:50  atproto         publish button → feed appears on lopecode.com
+00:55  linux           Linux boot prompt in browser, type `uname -a`
+00:58  end-card        newsletter URL + Bluesky handle
+
+Production notes
+----------------
+- Fixed viewport 1280×720 across every clip.
+- Cursor moves use page.mouse.move(..., { steps: 30 }) so motion glides.
+- Insert ~400ms beats between actions.
+- VO recorded as one 50s continuous take, footage cut to match its rhythm.
+- Captions burned in for muted autoplay.

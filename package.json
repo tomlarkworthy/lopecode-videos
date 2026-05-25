@@ -1,0 +1,12 @@
+{
+  "name": "lopecode-videos",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "clip:lsp": "bun src/clips/lsp.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "playwright": "^1.49.0"
+  }
+}
