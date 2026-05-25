@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "clip:lsp": "bun src/clips/lsp.ts"
+    "clip:lsp": "bun content/newsletter-001/clips/lsp/clip.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

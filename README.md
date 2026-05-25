@@ -1,25 +1,14 @@
 # lopecode-videos
 
-Video content for lopecode, including Playwright-automated clip capture.
+Video content for lopecode, captured by Playwright-driven browser automation.
 
-## Layout
-
-```
-content/
-  newsletter-001/
-    script.txt        # narration / cut list
-    clips/            # rendered clips (one subdir per cut)
-      <cut-name>/     # .webm captures + per-clip metadata
-src/
-  capture.ts          # shared Playwright harness
-  clips/
-    <cut-name>.ts     # one script per clip
-```
+See [CLAUDE.md](./CLAUDE.md) for the architecture and conventions.
 
 ## Running a clip
 
 ```bash
-bun src/clips/<cut-name>.ts
+bun install
+bun content/<series>/clips/<name>/clip.ts
 ```
 
-Output lands in `content/<series>/clips/<cut-name>/`.
+Output lands next to the `clip.ts` that produced it.
