@@ -5,6 +5,8 @@ Format: 12 cuts × 5s, one feature per cut. Mirrors the newsletter section order
 
 Cut list
 --------
+-0:06  intro           neon lopecode disk floats in, biro label writes on, inserts
+                       into 80s PC, CRT powers on, zoom to BASIC prompt, RUN ↵
 00:00  hook            parametric-svg robot arm — drag sliders, IK responds
 00:05  exporter        export menu → single .html file appears, double-click → opens
 00:10  pairing         Claude Code terminal beside notebook, type "add a slider", cell appears

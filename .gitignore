@@ -1,3 +1,6 @@
 node_modules/
 *.tmp.webm
 .DS_Store
+.auth/
+# Title-card intermediates: make-titles.ts wipes/regenerates these PNGs each run.
+content/*/.titles/*.png

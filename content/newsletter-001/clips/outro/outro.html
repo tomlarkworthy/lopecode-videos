@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Lopecode Newsletter 001 — outro</title>
+<style>
+  :root {
+    /* Outro timeline — the intro run in reverse. clip.ts mirrors TOTAL_MS.
+       Starts on the intro's last frame (zoomed in, CRT on, "] RUN
+       NEWSLETTER-001"); JS prints the completion + link, then these fire. */
+    --t-zoomout: 3300ms;  /* dolly back out (reverse of intro's zoom-in) */
+    --t-eject: 4500ms;    /* disk ejects (reverse of the insertion) — the last beat */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1280px; height: 720px; overflow: hidden;
+    background: #05010d;
+  }
+
+  .stage {
+    position: relative;
+    width: 1280px; height: 720px;
+    background: #05010d;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+
+  /* ---- Cyberpunk synthwave backdrop: sky, sun, neon grid floor ---- */
+  .bg {
+    position: absolute; inset: 0;
+    opacity: 1;                      /* outro: backdrop visible throughout (no fade to black) */
+    background:
+      radial-gradient(140% 78% at 50% 58%, #3a0b5e 0%, #1b0640 34%, #0a0220 64%, #05010d 100%);
+  }
+  .bg::after { /* glowing neon horizon line where sky meets floor */
+    content: ""; position: absolute; left: 0; right: 0; top: 56%;
+    height: 3px; transform: translateY(-50%);
+    background: #ff6ad5;
+    box-shadow: 0 0 18px 6px rgba(255,106,213,.85), 0 0 60px 22px rgba(150,70,255,.5);
+  }
+
+  .stars {
+    position: absolute; inset: 0 0 44% 0; opacity: 1;
+    background-image:
+      radial-gradient(1.4px 1.4px at 20% 28%, #fff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 70% 16%, #cfe9ff 50%, transparent 51%),
+      radial-gradient(1px 1px   at 45% 40%, #fff 50%, transparent 51%),
+      radial-gradient(1.3px 1.3px at 85% 34%, #ffd6f6 50%, transparent 51%),
+      radial-gradient(1px 1px   at 12% 52%, #fff 50%, transparent 51%),
+      radial-gradient(1.1px 1.1px at 60% 48%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px   at 33% 11%, #cfe9ff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 92% 22%, #fff 50%, transparent 51%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 92%);
+  }
+
+  .sun {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 640px; height: 640px; border-radius: 50%;
+    opacity: 1;
+    background: linear-gradient(180deg, #ffe14a 0%, #ff8a3c 30%, #ff5ea8 60%, #b14bff 100%);
+    filter: drop-shadow(0 0 36px rgba(255,110,200,.65)) drop-shadow(0 0 90px rgba(150,60,255,.45));
+  }
+  .sun::after { /* dark scan-slits across the lower half (retrowave sun) */
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: repeating-linear-gradient(180deg, transparent 0 9px, #1b0640 9px 15px);
+    -webkit-mask-image: linear-gradient(180deg, transparent 50%, #000 57%);
+    mask-image: linear-gradient(180deg, transparent 50%, #000 57%);
+  }
+
+  .grid {
+    position: absolute; left: -45%; right: -45%; bottom: 0; height: 44%;
+    opacity: 1;
+    background-image:
+      linear-gradient(rgba(0,245,255,.85) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(255,60,200,.7) 2px, transparent 2px);
+    background-size: 100% 40px, 56px 100%;
+    transform: perspective(380px) rotateX(74deg);
+    transform-origin: 50% 100%;
+    mask-image: linear-gradient(to top, #000 20%, transparent 96%);
+    filter: drop-shadow(0 0 4px rgba(0,245,255,.55));
+  }
+
+  /* ---- Scene: everything that gets dollied into during the zoom ---- */
+  .scene {
+    position: absolute; inset: 0;
+    transform: scale(2.55);          /* outro: starts zoomed in, dollies back out */
+    transform-origin: 640px 300px; /* screen centre, see .pc layout */
+  }
+
+  /* ---- 80s beige PC ---- */
+  .pc {
+    position: absolute; left: 50%; top: 96px;
+    width: 520px; height: 470px; transform: translateX(-50%);
+    opacity: 1;
+    background: linear-gradient(180deg, #d9cdb0 0%, #c8bb9a 55%, #b6a883 100%);
+    border-radius: 18px 18px 26px 26px;
+    box-shadow:
+      inset 0 3px 0 rgba(255,255,255,.5),
+      inset 0 -10px 22px rgba(0,0,0,.25),
+      0 30px 60px rgba(0,0,0,.55);
+  }
+  .pc .bezel {
+    position: absolute; left: 34px; top: 30px; right: 34px; height: 300px;
+    background: #2c2620;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 6px #1b1712, inset 0 6px 18px rgba(0,0,0,.8);
+  }
+  /* The actual display, centred at scene-origin (640, ~300) */
+  .screen {
+    position: absolute; left: 22px; top: 22px; right: 22px; bottom: 22px;
+    background: #060019;
+    border-radius: 6px;
+    overflow: hidden;
+    transform: scaleY(1);              /* outro: starts ON, powers off later */
+    filter: none;
+  }
+  .screen::before { /* scanlines */
+    content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,.0) 0 2px, rgba(0,0,0,.30) 2px 4px);
+    mix-blend-mode: multiply;
+  }
+  .screen::after { /* CRT vignette + glow */
+    content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
+  .screen-text {
+    position: absolute; inset: 0; z-index: 1;
+    padding: 26px 30px;
+    font-family: "Courier New", ui-monospace, monospace;
+    font-size: 18px; line-height: 1.5; font-weight: 700;
+    color: #39ff14;
+    text-shadow: 0 0 6px rgba(57,255,20,.9), 0 0 14px rgba(57,255,20,.5);
+    white-space: pre;
+  }
+  .cursor {
+    display: inline-block; width: .62em; height: 1.05em;
+    background: #39ff14; transform: translateY(.16em);
+    box-shadow: 0 0 8px rgba(57,255,20,.9);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Drive bay + slot below the screen bezel */
+  .drive {
+    position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
+    width: 360px; height: 70px;
+    background: linear-gradient(180deg, #cabd9c, #b3a57f);
+    border-radius: 8px;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.4), inset 0 -3px 8px rgba(0,0,0,.3);
+  }
+  .drive .slot {
+    position: absolute; left: 50%; top: 26px; transform: translateX(-50%);
+    width: 300px; height: 12px;
+    background: #1a160f;
+    border-radius: 3px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,.9);
+  }
+  .drive .led {
+    position: absolute; right: 22px; top: 30px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #ff3b3b; box-shadow: 0 0 8px #ff3b3b, inset 0 0 2px #fff; /* outro: lit (disk in), goes dark on eject */
+  }
+
+  /* ---- The lopecode brand disk (exporter-3 favicon `disk_svg`) ---- */
+  /* Screen-space clip whose bottom edge sits on the slot line (stage
+     y≈498). The disk sinks through it and is physically cut off at the
+     slot regardless of its 3D tilt — swallowed, not faded. */
+  .disk-clip {
+    position: absolute; left: 0; top: 0; right: 0; height: 498px;
+    overflow: hidden;
+    z-index: 5;
+  }
+  /* Outro: the disk is INSIDE the machine at the start (it was inserted in
+     the intro), so it's hidden until the eject reveals it (`ejectShow`). */
+  .disk {
+    position: absolute; left: 50%; top: 150px;
+    width: 230px; height: 232px; transform: translateX(-50%) rotate(-4deg);
+    opacity: 0;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+    /* neon halo around the brand mark */
+    filter:
+      drop-shadow(0 0 9px rgba(0,240,255,.75))
+      drop-shadow(0 0 20px rgba(255,60,200,.5));
+  }
+  .disk .disk-svg {
+    display: block; width: 100%; height: 100%;
+    fill: #eaf6ff;                  /* glowing off-white shell */
+  }
+  /* hand-applied paper label, sat over the disk face */
+  .disk .sticker {
+    position: absolute; left: 17%; top: 33%; width: 66%; height: 40%;
+    background: linear-gradient(180deg, #fdfbf2, #efe9d6);
+    border-radius: 4px;
+    transform: rotate(-2.5deg);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.10), 0 2px 5px rgba(0,0,0,.4);
+    overflow: hidden;
+  }
+  .disk .biro {
+    position: absolute; left: 12px; top: 14px; right: 10px;
+    font-family: "Bradley Hand", "Marker Felt", "Comic Sans MS", cursive;
+    font-size: 23px; font-weight: 700; line-height: 1.2;
+    color: #14306e;                 /* ballpoint blue */
+    transform: rotate(-1.5deg);
+    text-shadow: 0 0 1px rgba(20,48,110,.4);
+  }
+
+  /* ===========  PLAY: the intro, in reverse  ===========
+     Everything starts in the intro's END state (set as the defaults
+     above): zoomed in, CRT on, backdrop visible, disk inserted. These
+     animations undo the zoom and insertion, finishing on the full neon
+     scene with the disk ejected and resting over the screen (no fade to
+     black). The disk eject and zoom-out simply replay the intro's
+     `diskInsert` / `dolly` keyframes with `direction: reverse`. */
+  /* CRT stays on the whole time (a powered-off dark screen against the
+     synthwave backdrop read oddly). */
+  .playing .scene  { animation: dolly 1200ms cubic-bezier(.5,0,.2,1) var(--t-zoomout) reverse forwards; }
+  .playing .disk   { animation: diskInsert 1000ms cubic-bezier(.45,.05,.55,1) var(--t-eject) reverse both,
+                                ejectShow 1ms steps(1) var(--t-eject) forwards; }
+  .playing .led    { animation: ledOff 160ms steps(1) var(--t-eject) forwards; }
+  .playing .grid   { animation: gridScroll 1.1s linear 0ms infinite; }
+
+  @keyframes gridScroll { from { background-position: 0 0, 0 0; }
+                          to   { background-position: 0 40px, 0 0; } }
+  @keyframes ledOff { to { background: #3a1010; box-shadow: inset 0 0 3px #000; } }
+  /* Disk is hidden (inside the machine) until the eject reveals it. */
+  @keyframes ejectShow { to { opacity: 1; } }
+
+  /* Reused in reverse for the outro. Forward (intro) it inserts the disk;
+     `direction: reverse` ejects it: from inserted/clipped (100%) back to
+     resting over the screen (0%). See the intro clip's CLAUDE.md. */
+  @keyframes diskInsert {
+    0%   { top: 150px; transform: translateX(-50%) perspective(440px) translateZ(0px)    rotateZ(-4deg) rotateX(0deg); }
+    30%  { top: 230px; transform: translateX(-50%) perspective(440px) translateZ(0px)    rotateZ(0deg)  rotateX(-30deg); }
+    65%  { top: 340px; transform: translateX(-50%) perspective(440px) translateZ(0px)    rotateZ(0deg)  rotateX(-78deg); }
+    100% { top: 390px; transform: translateX(-50%) perspective(440px) translateZ(-200px) rotateZ(0deg)  rotateX(-90deg); }
+  }
+  /* Reused in reverse for the outro's zoom-out (dolly back to scale 1). */
+  @keyframes dolly {
+    from { transform: scale(1); }
+    to   { transform: scale(2.55); }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="bg"></div>
+    <div class="stars"></div>
+    <div class="sun"></div>
+    <div class="grid"></div>
+
+    <div class="scene">
+      <div class="pc">
+        <div class="bezel">
+          <div class="screen">
+            <div class="screen-text" id="screenText"></div>
+          </div>
+        </div>
+        <div class="drive">
+          <div class="slot"></div>
+          <div class="led"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disk-clip">
+    <div class="disk">
+      <!-- lopecode brand disk: exporter-3 `disk_svg`, the favicon mark -->
+      <svg class="disk-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect height="4" width="4" x="20" y="50"/>
+        <rect height="4" width="16" x="28" y="50"/>
+        <path d="M32,38a8,8,0,1,0-8-8A8.009,8.009,0,0,0,32,38Zm0-12a4,4,0,1,1-4,4A4,4,0,0,1,32,26Z"/>
+        <path d="M6,62H58a2,2,0,0,0,2-2V15a2,2,0,0,0-.586-1.414l-11-11A2,2,0,0,0,47,2H6A2,2,0,0,0,4,4V60A2,2,0,0,0,6,62Zm42-4H16V46H48ZM16,6H31v4h4V6h4v8H16ZM8,6h4V16a2,2,0,0,0,2,2H41a2,2,0,0,0,2-2V6h3.172L56,15.829V58H52V44a2,2,0,0,0-2-2H14a2,2,0,0,0-2,2V58H8Z"/>
+      </svg>
+      <div class="sticker">
+        <div class="biro">Lopecode<br>Newsletter 001</div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+<script>
+  const $screen = document.getElementById('screenText');
+
+  // The screen starts exactly where the intro ended: RUN entered, prompt
+  // dropped to a fresh line. The program then prints its completion + link.
+  const RAN =
+    "*** LOPECODE 64 BASIC V2 ***\n" +
+    "64K RAM SYSTEM  38911 BYTES FREE\n\n" +
+    "READY.\n" +
+    "] RUN NEWSLETTER-001\n";
+  const COMPLETE = RAN + "NEWSLETTER-001 COMPLETE\n";
+  const DONE = COMPLETE + "github.com/tomlarkworthy/lopecode\n";
+
+  function show(body) {
+    $screen.textContent = body;
+    const c = document.createElement('span');
+    c.className = 'cursor';
+    $screen.appendChild(c);
+  }
+
+  function startOutro() {
+    document.body.classList.add('playing');
+    // Program output prints, then the link — both well before the CRT
+    // powers off (--t-poweroff) so the link holds on screen to be read.
+    setTimeout(() => show(COMPLETE), 700);
+    setTimeout(() => show(DONE), 1250);
+  }
+
+  // First frame matches the intro's last frame. clip.ts calls
+  // window.startOutro() after mark(); direct opens auto-play.
+  window.startOutro = startOutro;
+  show(RAN);
+  if (!window.__captureMode) {
+    setTimeout(startOutro, 600);
+  }
+</script>
+</body>
+</html>
