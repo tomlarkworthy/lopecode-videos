@@ -1,6 +1,13 @@
 node_modules/
+._*
 *.tmp.webm
 .DS_Store
 .auth/
 # Title-card intermediates: make-titles.ts wipes/regenerates these PNGs each run.
 content/*/.titles/*.png
+
+# Raw screen recordings and build intermediates for the live2026 series (hundreds of MB).
+content/live2026/clips/*/raw/
+content/live2026/clips/*/build/
+# Rejected machine cut, regenerable with postprocess.ts; the deliverable is Tom's own edit.
+content/live2026/clips/aws-injection/aws-injection.mp4
