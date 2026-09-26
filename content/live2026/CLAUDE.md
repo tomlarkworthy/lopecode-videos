@@ -1,7 +1,7 @@
 # live2026
 
 Clips for the LIVE 2026 workshop submission *Source-last programming*
-(essay: `lopebooks/notebooks/@tomlarkworthy_lopecode-live-2026-v2.html` in the
+(essay: `lopebooks/notebooks/@tomlarkworthy_lopecode-live-2026.html` in the
 `lopecode-dev` superproject).
 
 Unlike `newsletter-001`, these clips are **not** Playwright captures. Tom records
