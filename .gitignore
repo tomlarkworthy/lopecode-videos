@@ -11,3 +11,6 @@ content/live2026/clips/*/raw/
 content/live2026/clips/*/build/
 # Rejected machine cut, regenerable with postprocess.ts; the deliverable is Tom's own edit.
 content/live2026/clips/aws-injection/aws-injection.mp4
+
+# Fairy Dog stream key + VDO.Ninja room.
+content/fairy-dog/local.json
